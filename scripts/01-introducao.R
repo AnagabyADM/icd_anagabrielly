@@ -2,24 +2,25 @@
 # DOCUMENTACAO DO SCRIPT
 # ============================================================
 # Arquivo: 01_introducao.R
-# Autor(a): <seu nome>
-# Data: <dd/mm/aaaa>
+# Autor(a): Ana Gabrielly
+# Data: 24/03/2026
 # Objetivo: entender os fundamentos da linguagem R
 
 
 # ATALHO PARA CRIAR SEÇÕS DE CÓDIGO: CTRL + SHIFT + R
 
-# ==========================================
-# BLOCO 0 - Configuracoes globais
-# ==========================================
+
+#  BLOCO 0 - Configuracoes globais ----------------------------------------
+
 
 # Ajusta localidade para portugues (datas, mensagens e formatos)
 Sys.setlocale("LC_ALL", "pt_BR.UTF-8")
 
 
-# ==========================================
-# BLOCO 1 - R como uma grande calculadora
-# ==========================================
+
+
+# # BLOCO 1 - R como uma grande calculadora -------------------------------
+
 
 # Carrega o pacote se ele tiver sido instalado
 library(tidyverse)
@@ -73,9 +74,9 @@ sqrt(225)
 round(3.14159, digits = 2)
 
 
-# ============================================================
-# BLOCO 2 - Tipos Atômicos e classes
-# ============================================================
+
+# BLOCO 2 - Tipos Atômicos e classes --------------------------------------
+
 
 # Os tipos de dados definem como os dados
 # são armazenados na memória.
@@ -113,9 +114,9 @@ f <- as.numeric(c)
 f
 
 
-# ============================================================
-# BLOCO 3 - Vetores numericos e vetorizacao
-# ============================================================
+
+#  BLOCO 3 - Vetores numericos e vetorizacao ------------------------------
+
 
 # Atalho de teclado para inserir <- :
 # Alt + - (Windows/Linux)
@@ -167,9 +168,10 @@ max(receita_diaria)
 ?length
 
 
-# ============================================================
-# BLOCO 4 - Vetores
-# ============================================================
+
+
+# BLOCO 4 - Vetores -------------------------------------------------------
+
 
 # vetor de caracteres (strings) com nome da empresa
 nome_empresa <- c("Loja A", "Loja B", "Loja C")
@@ -186,10 +188,10 @@ meta_batida
 class(meta_batida)
 
 
-# ============================================================
-# BLOCO 5 - Criando uma tibble com dados ficticios de vendas
-# e primeiros exemplos com dplyr
-# ============================================================
+
+
+# Criando uma tibble com dados ficticios de vendas # e primeiros e --------
+
 
 # Neste bloco vamos criar um pequeno conjunto de dados
 # semelhante a um banco de dados simples de vendas.
@@ -306,9 +308,13 @@ vendas_diarias |>
 vendas_diarias |>
   filter(between(receita, 10000, 11500))
 
-# ============================================================
-# BLOCO 6 - Manipulação de dados com dplyr e uso do pipe
-# ============================================================
+
+
+# BLOCO 6 - Manipulação de dados com dplyr e uso do pipe ------------------
+
+
+
+
 
 # O operador pipe |> permite encadear operações
 # de forma mais legível.
@@ -324,23 +330,6 @@ vendas_diarias |>
 #   funcao2() |>
 #   funcao3()
 
-
-# ------------------------------------------------------------
-# Boas práticas no RStudio
-# ------------------------------------------------------------
-
-# LEMBRAR DE MOSTRAR PARA OS ALUNOS:
-
-# 1) Configurar o RStudio para usar o pipe nativo |>
-
-# 2) Atalho de teclado para inserir pipe
-# Ctrl + Shift + M (Windows/Linux)
-
-# 3) Formatar código automaticamente
-# Code -> Reformat Selection
-
-# 4) (OPCIPONAL) Mostrar como reorganizar os painéis do RStudio
-# Console, Environment, Source, Files etc.
 
 
 # ------------------------------------------------------------
@@ -447,9 +436,9 @@ ggplot(vendas_diarias, aes(x = data, y = lucro, size = receita, color = loja)) +
   geom_point()
 
 
-# ============================================================
-# BLOCO 8 - Resolução dos exercícios propostos nos slides
-# ============================================================
+
+# Resolução dos exercícios propostos nos slides ---------------------------
+
 
 
 # Solução do Ex. 1
