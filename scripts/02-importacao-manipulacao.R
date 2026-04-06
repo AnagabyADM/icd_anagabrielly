@@ -1,6 +1,6 @@
 # Arquivo: 02-importacao-manipulacao.R
-# Autor(a): Ana Gabrielly
-# Data: <24/03/2026
+# Autor(a): Ana gabrielly
+# Data: 30/03/26
 # Objetivos:
 # 1. Importar um arquivo csv de dados
 # 2. Preparar os dados para análise
@@ -59,3 +59,163 @@ dados_vendas_limpos <- dados_vendas |>
 
 # verifica a estrutura dos dados
 glimpse(dados_vendas_limpos)
+
+# salva os dados limpos em um arquivo rds para análises
+# futuras sem precisar repetir a preparação dos dados
+
+## define o caminho relativo para salvar o arquivo rds
+caminho_rds <- here("dados/limpos/dados_vendas_limpos.rds")
+
+## salva o objeto dados_vendas_limpos no formato rds
+readr::write_rds(dados_vendas_limpos, caminho_rds)
+
+
+# A função filter ---------------------------------------------------------
+
+# filtra as vendas realizadas na cidade de "Formiga"
+dados_vendas_limpos |>
+  filter(cidade == "Formiga")
+
+
+# filtra as vendas realizadas por um representante específico
+dados_vendas_limpos |>
+  filter(representante == "Representante 1")
+
+
+# filtra as vendas realizadas em Formiga por um representante específico
+dados_vendas_limpos |>
+  filter(cidade == "Formiga" & representante == "Representante 1")
+
+
+# filtra as vendas realizadas em Formiga ou em Arcos com o operador |
+dados_vendas_limpos |>
+  filter(cidade == "Formiga" | cidade == "Arcos")
+
+# filtra as mesmas vendas usando %in%, uma forma mais compacta
+# para múltiplas comparações da mesma variável
+dados_vendas_limpos |>
+  filter(cidade %in% c("Formiga", "Arcos"))
+
+
+# salva o resultado em um novo objeto
+dados_vendas_formiga_arcos <- dados_vendas_limpos |>
+  filter(cidade %in% c("Formiga", "Arcos"))
+
+
+# exibe o resultado
+dados_vendas_formiga_arcos
+
+
+# A função select ---------------------------------------------------------
+
+# seleciona apenas as colunas cidade, produto e receita
+dados_vendas_limpos |>
+  select(cidade, produto, receita)
+
+# remove as coluna representante e cidade
+dados_vendas_limpos |>
+  select(-representante, -cidade)
+
+# salvando o resultado em um novo objeto
+dados_vendas_selecionados <- dados_vendas_limpos |>
+  select(cidade, produto, receita)
+
+# exibe o resultado
+dados_vendas_selecionados
+
+
+# A função mutate ---------------------------------------------------------
+
+# cria a variável preco_desconto (10% sobre o preço_unitario)
+dados_vendas_limpos |>
+  mutate(preco_desconto = preco_unitario * 0.9)
+
+
+# cria a variável "receita_total" multiplicando unidades por preco_unitario
+dados_vendas_limpos |>
+  mutate(receita_total = unidades * preco_unitario)
+
+
+# cria a variável receita total, agrupa por cidade e ordena por receita total
+dados_vendas_limpos |>
+  mutate(receita_total = unidades * preco_unitario) |>
+  group_by(cidade) |>
+  summarise(receita_total_cidade = sum(receita_total)) |>
+  arrange(desc(receita_total_cidade))
+
+
+# cria a variável "categoria_receita" com duas categorias
+dados_vendas_limpos |>
+  mutate(categoria_receita = ifelse(receita > 1000, "Alta", "Baixa")) |>
+  select(cidade, produto, categoria_receita)
+
+
+# cria a variável "categoria_receita" com múltiplas categorias
+dados_vendas_limpos |>
+  mutate(categoria_receita = case_when(
+    receita > 1000 ~ "Alta",
+    receita > 500 & receita <= 1000 ~ "Média",
+    receita > 0 & receita <= 500 ~ "Baixa",
+    TRUE ~ "Sem Receita"
+  )) |>
+  select(cidade, produto, categoria_receita)
+
+
+# As funções sumarise e group_by ------------------------------------------
+
+# calcula a receita media
+dados_vendas_limpos |> 
+  summarise(receita_media = mean(receita))
+
+#calcula a receita total
+dados_vendas_limpos |> 
+  summarise(receita_total = sum(receita))
+
+# calcula o numero de representantes distintos dados
+dados_vendas_limpos |> 
+  summarise(numero_representantes = n_distinct(representante))
+
+# calcula o numero total de vendas realizadas
+dados_vendas_limpos |> 
+  summarise(total_vendas=n())
+
+
+# calcula receita media por cidade
+dados_vendas_limpos |> 
+  group_by(cidade)|> 
+  summarise(receita_media = mean(receita))
+
+#calcula receita media por produto 
+dados_vendas_limpos |> 
+  group_by(produto)|> 
+  summarise(receita_media = mean(receita))
+
+# calcula por cidade e produto
+dados_vendas_limpos |> 
+  group_by(cidade, produto)|> 
+  summarise(receita_media = mean(receita))
+
+
+# A função arrange --------------------------------------------------------
+
+#ordena os dados por receita em ordem crescente 
+dados_vendas_limpos |> 
+  arrange(receita)
+
+# ordena os dados por ordem decrescente
+dados_vendas_limpos |> 
+  arrange(desc(receita))
+
+#ordena receita media por ordem crescente
+dados_vendas_limpos |> 
+  group_by(cidade) |> 
+summarise(receita_media = mean(receita)) |> 
+  arrange(receita_media)
+
+# ordena a receita media por cidade em ordem decrescente
+#salva o resultado em um novo objetivo
+receita_media_cidade <-
+  dados_vendas_limpos |> 
+  group_by(cidade) |> 
+  summarise(receita_media = mean(receita)) |> 
+  arrange(desc(receita_media))
