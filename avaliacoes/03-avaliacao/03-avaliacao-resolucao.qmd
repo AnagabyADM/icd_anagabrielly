@@ -1,0 +1,220 @@
+---
+title: "Resolução da Avaliação 3 (34 pontos)"
+subtitle: "Introdução à Ciência de Dados <br> Bacharelado em Administração"
+lang: pt-BR
+author: 
+- Ana Gabrielly
+- Cristina Pereira
+- Leticia Rodrigues
+- Leticia Vilela
+date: "2026-07-06"
+title-block-banner: "#27445C"
+format:
+  html:
+    embed-resources: true
+    toc: true
+    toc-depth: 2
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+#| echo: false
+#| include: false
+
+# não exibe números em notação científica
+options(digits = 5, scipen = 999)
+
+# pacotes utilizados
+library(here)
+library(tidyverse)
+library(tidyplots)
+
+# Permite que os gráficos do tidyplots usem o espaço disponível
+tidyplots_options(width = NA, height = NA)
+
+# Guarda o caminho do arquivo CSV dentro do projeto RStudio
+caminho_dados <- here("dados/brutos/belezar_vendas_diarias.csv")
+
+# Lê o arquivo CSV e cria o objeto dados_belezar
+dados_belezar <- read_csv(caminho_dados)
+```
+
+
+
+# Questão 1 
+
+
+**a)** 
+```{r}
+# calcula a receita total média e mediana
+dados_belezar |>
+  summarise(
+    receita_media = mean(receita),
+    receita_mediano = median(receita),
+    desvio_padrao = sd(receita),
+    intervalo_interquartil = IQR(receita)
+  )
+```
+
+
+
+**b)**
+## a média (cerca de 10.274	) e a mediana (aproximadamente 8.9	) estão próximas. A média um pouco maior sugere influência de algumas semanas com receitas mais altas o que é benefico para a empresa. Para descrever uma receita  típica, a mediana é uma boa escolha, pois representa o centro dos dados e é menos afetada por poucas semanas de reitas muito altas ou baixas. Como a média e a mediana estão próximas, usar a média também seria aceitável, desde que a resposta mencionasse essa leve influência dos valores altos.
+
+
+**c)**
+
+## O valor do percentil está em 5, significa que o valor avaliado é menor que 95%, ao avaliar uma amostra como os dados belezar. Sendo assim, estar no percentil 90 com uma receita de apenas 5 é um resultado ruim, indicando um faturamento baixo no topo da curva.
+
+
+# Questão 2
+
+**a)** 
+```{r}
+dados_belezar|>
+  tidyplot(x = receita) |>
+  add_histogram(bins = 10, fill = "steelblue") |>
+  adjust_x_axis_title("Receita dados_belezar (em US$ mil)") |>
+  adjust_y_axis_title("Número de semanas") |>
+  add_caption("Fonte: dados_belezar.") |>
+  adjust_font(fontsize = 14)
+```
+
+
+
+**b)**
+
+##O histograma  mostra que a distribuição empírica da receita está centrada em torno de US$ 200. A distribuição não parece fortemente assimétrica, e sim simetria, mas algumas semanas de gasto mais alto estendem o gráfico para a esquerda, não se estendendo muito para o lado direito  do grafico.
+#a faixa de valores em que se concentra a maior parte dos dias é de 0, a marior parte em torno de 15 e se estende ate o 20.
+# a média (cerca de 10.274	) e a mediana (aproximadamente 8.9	) de acordo com o grafico pode se observar que os naiores valores da receita de concentram por volta da parte 15 do grafico.
+
+# Questão 3
+
+
+**a)** 
+```{r}
+dados_belezar |>
+  tidyplot(x = status_promocao, y = receita) |>
+  add_boxplot() |>
+  adjust_y_axis_title("comparativo da variável receita por status_promocao") |>
+  adjust_font(fontsize = 14)
+```
+
+
+
+**b)**
+
+# o status que apresenta receita significativamente maior é o com promoção.
+#Pelo boxplot, o grupo "Com promoção" apresenta maior variabilidade. Isso pode 
+#ser observado porque a caixa (IQR) é mais alta, indicando maior dispersão dos 
+#50% centrais dos dados. Há mais valores extremos e eles estão mais distantes da
+#caixa do que no grupo Sem promoção.Já o grupo "Sem promoção" apresenta uma 
+#distribuição mais concentrada, com caixa menor, bigodes mais curtos e menos 
+#dispersão. a variável receita tem maior variabilidade no grupo Com promoção.  
+#os dados não permitem afirmar que a promoção causa a diferença observada.
+
+
+# Questão 4
+
+
+A. [ ]
+
+ 
+B. [ ]
+
+
+C. [ X ]
+
+
+D. [ ]
+
+
+
+
+# Questão 5
+
+
+A. [ ]
+
+ 
+B. [X]
+
+
+C. [ ]
+
+
+D. [ ]
+
+
+
+
+# Questão 6
+
+
+A. [ ]
+
+ 
+B. [ ]
+
+
+C. [ ]
+
+
+D. [X]
+
+
+
+
+# Questão 7
+
+
+A. [ ]
+
+ 
+B. [X]
+
+
+C. [ ]
+
+
+D. [ ]
+
+
+
+
+# Questão 8
+
+
+
+A. [X]
+
+ 
+B. [ ]
+
+
+C. [ ]
+
+
+D. [ ]
+
+
+
+
+# Questão 9
+
+
+
+A. [ ]
+
+ 
+B. [ ]
+
+
+C. [X]
+
+
+D. [ ]

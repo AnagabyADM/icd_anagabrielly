@@ -1,0 +1,208 @@
+---
+lang: pt-BR
+title: "Resolução da Lista de Exercícios 6"
+author: "Ana GAbrielly"
+date: today
+format:
+  html:
+    theme: flatly
+    embed-resources: true
+    toc: true
+execute:
+  eval: true
+  echo: true
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+
+# Exibe valores numéricos sem notação científica
+options(digits = 5, scipen = 999)
+
+# pacotes utilizados
+library(here)
+library(tidyverse)
+library(tidyplots)
+
+# Permite que os gráficos do tidyplots usem o espaço disponível no HTML
+tidyplots_options(width = NA, height = NA)
+
+# Importa o objeto dados_marketing_limpos.rds
+caminho_dados <- here("dados/limpos/dados_marketing_limpos.rds")
+dados_marketing <- read_rds(caminho_dados)
+```
+
+
+
+## Exercício 1
+
+
+**a.**
+
+```{r}
+dados_marketing|>
+  summarise(
+    # Média amostral
+    media = mean(gasto_total),
+
+    # Mediana amostral
+    mediana = median(gasto_total)
+  )
+
+
+
+```
+
+
+
+**b.**
+# desvio padrao e IQR de gastos
+
+```{r}
+dados_marketing |> 
+  summarise(
+    # Amplitude amostral
+    amplitude = max(gasto_total) - min(gasto_total),
+    
+    # Variancia amostral
+    variancia = var(gasto_total),
+    
+    # Desvio-padrão amostral
+    desvio_padrao = sd(gasto_total),
+    
+    # Intervalo Interquartil amostral
+    iqr = IQR(gasto_total)
+    )
+```
+
+
+
+```{r}
+# 5. Quantis da receita--------------------------------------------
+
+# Quantis amostrais selecionados
+
+quantis_receita <- dados_marketing|>
+summarise(
+  # Minimo amostral e percentil 5
+  p0 = quantile(gasto_total,0),
+  p5 = quantile(gasto_total, 0.05),
+  
+  # Quartis amostrais
+  q1 = quantile(gasto_total,0.025),
+  mediana = quantile(gasto_total, 0.50),
+  q3 = quantile(gasto_total, 0,75),
+  
+  # Percentil 95 e maximo amostral
+  p95 = quantile(gasto_total, 0.95),
+  p100 = quantile(gasto_total,1)
+  
+)
+# Exibe os quantis calculos
+quantis_receita
+```
+
+
+
+
+**c.**
+```{r}
+quantis_gasto <- dados_marketing |> 
+  summarise(
+    # Mínimo amostral percentil 5
+    p0 = quantile(gasto_total, 0),
+    p5 = quantile(gasto_total, 0.05),
+    
+    # Quartis amostrais
+    q1 = quantile(gasto_total, 0.25),
+    mediana = quantile(gasto_total, 0.50),
+    q3 =quantile(gasto_total, 0.75),
+    
+    # Percentil 95 e máxima amostral
+    p95 = quantile(gasto_total, 0.95),
+    p100 = quantile(gasto_total, 1)
+  )
+# Exibe os quantis calculados
+quantis_gasto
+```
+
+Interpretações:
+
+-*P5*: cerca de 5% das semanas tiveram gasto total em marketing de até
+$ 84,14 mil, cerca de 95% das semanas ficaram acima deste valor.
+
+-*q!*: cerca de 25% das semanas tiveram gasto total em marketing de até
+$ 84,14 mil, cerca de 75% das semanas ficaram acima deste valor.
+
+
+-*mediana!*: cerca de 50% das semanas tiveram gasto total em marketing de até
+$ 84,14 mil, cerca de 50% das semanas ficaram acima deste valor.
+
+
+-*q3*: cerca de 75% das semanas tiveram gasto total em marketing de até
+$ 84,14 mil, cerca de 25% das semanas ficaram acima deste valor.
+
+-*q95!*: cerca de 95% das semanas tiveram gasto total em marketing de até
+$ 84,14 mil, cerca de 5% das semanas ficaram acima deste valor.
+
+
+
+
+**d.** -** valor tipico**: a media (cerca de $113 mil) e a mediana (aproximadamente $ 110 mil) do gasto total estão proximas. A média um pouco maior sugere influencia de algumas semanas com gastos mais alta. Para descrever o investimento semanal tipico, a median é uma boa escoljhs, pois o centro da destibuição dos dados e é menos afetada por valores muito altos ou baixo em relação á maioria dos dados. Como a média e amediana do gasto toral estão proximas, usar o gasto toral medio também seria aceitavel, dedes que a reposta mencionasse a leve influência dos valores altos.
+
+_** Dispersao (variabilidade)**: O intervalo interquartil é menos afetado por semansas de gastos muito alto ou muito baixo, porque ele mede a distancia entre q1 e 13. Ou seja, ele identifica a faixa onde estjá a metade. Já o devio- padeão usa a distancia entre is gastis de tidas as senamas em relação ao gasto médio, por isso, semanas com gasto muito alto ou muito baixo pode afetar bastante seu valor.
+
+- **Semanas atípicas**: pelo criterio definido no enunciado, a faixa usaual que concentra 90% das semanas vai de aproximadamente $ 84 mil (p5) a $ 152 mil merece atenção da equipe. Valores baixo de $ 84 mil também ficarm fora da faixa usual, mas por gasto muito baixo.
+
+
+## Exercício 2
+
+
+```{r}
+# Dados sobre o desempenho semanal (R$ mil) de duas equipes de vendas
+desempenho_equipes <- tibble(
+  equipe = rep(c("A", "B"), each = 10),
+  desempenho = c(85, 92, 78, 110, 95, 105, 115, 98, 102, 250,
+                 120, 115, 125, 118, 122, 130, 115, 120, 125, 122)
+)
+```
+
+
+**a.** 
+```{r}
+desempenho_equipes |>
+  group_by(equipe) |>
+  summarise(
+    desvio_padrao = sd(desempenho),
+    amplitude = max(desempenho) - min(desempenho),
+    intervalo_interquartil = IQR(desempenho),
+    cv = (sd(desempenho) / mean(desempenho)) * 100
+  )
+```
+**b.**  Neste item, uma equipe mais consistente é aquela cujo desempenho  semansl varia mensos de uma semansqa para outra, Ou seja, seus resultados ficam mais proximos entre si, sem grandes variações. Isso não segnifica, por se só, que a equipe seja melhor, neste caso estamos comparando a dispersão ou variabilidade dos desempenhos.
+
+A equipe B foi a mais consistente. Todas as medidas de variabilidade apontam nessa direção: desvio-padrão de cerca de 5 contra 49, amplitude de 15 contra  172.
+coeficiente de variação resume bem a comparação porque mede a variabilidade em relação ao nivel médio de desempenho de cada equipe.
+
+Efeito do valor 250: esse valor aumenta muito o desvio- padrão, a amplitude e o cv da equipe A. o intervalo interquartil é bom menos afetado, porque mede onde está a metade intermediaária das semans, depis de ordenar os desempenhos deo menor paro o maior. A mediana também muda pouco distante desse valor extremo. Por isso, o intervalo interquartil e a mediana são medidas mais robustas, issto é medidas que mudam menos qunado aparece uma valor muito alto ou um muito baixo.
+
+
+concluir que uma equipe é melhor: não com apenas estes dados. São somente 10 semanas por equipe, e o valor 250 pode representar uma semansa excepcional, uma meta especial ou até um erro  de registro. Antes de concluir, seria preciso entender a origem desse valor, verificar se as equipes atuarm em dondições comparaveis (mercado, metas, carteira de clientes e periodo ) e analisar mais semanas. a analise mosta uma diferença decritiva , mas ainda não sustenta uma conlcusão geral sobre desempenho.
+
+
+
+
+
+## Exercício 3
+
+# Histograma para publicação----------------------------------------
+
+# Versão final: eixos nomeados, fonte dos dados e fonte ampliada
+dados-marketing |> 
+  tidyplot(x= receita_vendas) |> 
+  add_histogram(bins = -, fill = )
+123456789987654321789456123987456123
+  
+  
